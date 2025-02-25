@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chemical Dosage Calculator</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #444;
+    }
+    p {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #666;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background: #5563DE;
+      color: #fff;
+      font-weight: 500;
+    }
+    td input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button {
+      display: block;
+      width: 200px;
+      margin: 0 auto;
+      padding: 10px;
+      background: #28a745;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #218838;
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        display: none;
+      }
+      td {
+        position: relative;
+        padding-left: 50%;
+        text-align: left;
+        border: none;
+        border-bottom: 1px solid #eee;
+      }
+      td:before {
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+      }
+      td:nth-of-type(1):before { content: "Well"; }
+      td:nth-of-type(2):before { content: "Flow (MMSCF)"; }
+      td:nth-of-type(3):before { content: "Dosage (pint/MMSCF)"; }
+      td:nth-of-type(4):before { content: "Pint/Day"; }
+      td:nth-of-type(5):before { content: "Liter/Day"; }
+      td:nth-of-type(6):before { content: "Cm/Day"; }
+      td:nth-of-type(7):before { content: "Quart/Day"; }
+      td:nth-of-type(8):before { content: "mL/Min"; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Chemical Dosage Calculator</h1>
+    <p>Masukkan Flow Gas (MMSCF) dan Dosage (pint/MMSCF) untuk masing-masing well, lalu tekan Enter atau klik tombol Hitung.</p>
+    <table id="dosageTable">
+      <thead>
+        <tr>
+          <th>Well</th>
+          <th>Flow (MMSCF)</th>
+          <th>Dosage (pint/MMSCF)</th>
+          <th>Pint/Day</th>
+          <th>Liter/Day</th>
+          <th>Cm/Day</th>
+          <th>Quart/Day</th>
+          <th>mL/Min</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Baris well dengan default value -->
+        <tr>
+          <td>DM 2</td>
+          <td><input type="number" step="any" class="flow" value="29" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.75" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><input type="number" step="any" class="flow" value="10.5" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><input type="number" step="any" class="flow" value="5" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><input type="number" step="any" class="flow" value="19" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><input type="number" step="any" class="flow" value="21" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.70" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><input type="number" step="any" class="flow" value="8" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><input type="number" step="any" class="flow" value="25" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><input type="number" step="any" class="flow" value="3.5" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td><input type="number" step="any" class="flow" value="74" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.75" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td><input type="number" step="any" class="flow" value="64" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.75" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td><input type="number" step="any" class="flow" value="44.5" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td><input type="number" step="any" class="flow" value="15.6" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td><input type="number" step="any" class="flow" value="35" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td><input type="number" step="any" class="flow" value="40" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td><input type="number" step="any" class="flow" value="71" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>18</td>
+          <td><input type="number" step="any" class="flow" value="9.7" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>22</td>
+          <td><input type="number" step="any" class="flow" value="2.5" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>24</td>
+          <td><input type="number" step="any" class="flow" value="64" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+        <tr>
+          <td>27</td>
+          <td><input type="number" step="any" class="flow" value="52" placeholder="Flow"></td>
+          <td><input type="number" step="any" class="dosage" value="0.65" placeholder="Dosage"></td>
+          <td class="pintDay"></td>
+          <td class="literDay"></td>
+          <td class="cmDay"></td>
+          <td class="quartDay"></td>
+          <td class="mlMin"></td>
+        </tr>
+      </tbody>
+    </table>
+    <button id="calculateBtn">Hitung</button>
+  </div>
+
+  <script>
+    function calculateDosage() {
+      // Konstanta konversi
+      const pintToLiter = 0.473;
+      const literToQuart = 1.057;
+      const literPerCm = 12;
+      const minutesPerDay = 1440;
+
+      // Ambil semua baris pada tabel
+      const rows = document.querySelectorAll("#dosageTable tbody tr");
+      rows.forEach(function(row) {
+        // Ambil nilai input flow dan dosage (pint/MMSCF)
+        const flow = parseFloat(row.querySelector("input.flow").value) || 0;
+        const dosage = parseFloat(row.querySelector("input.dosage").value) || 0;
+
+        // Hitung nilai-nilai dosis
+        const pintPerDay = flow * dosage;
+        const literPerDay = pintPerDay * pintToLiter;
+        const cmPerDay = literPerDay / literPerCm;
+        const quartPerDay = literPerDay * literToQuart;
+        const mlPerMin = (literPerDay * 1000) / minutesPerDay;
+
+        // Tampilkan hasil dengan 2 angka di belakang koma
+        row.querySelector(".pintDay").textContent = pintPerDay.toFixed(2);
+        row.querySelector(".literDay").textContent = literPerDay.toFixed(2);
+        row.querySelector(".cmDay").textContent = cmPerDay.toFixed(2);
+        row.querySelector(".quartDay").textContent = quartPerDay.toFixed(2);
+        row.querySelector(".mlMin").textContent = mlPerMin.toFixed(2);
+      });
+    }
+
+    // Hitung saat tombol "Hitung" ditekan
+    document.getElementById("calculateBtn").addEventListener("click", calculateDosage);
+
+    // Tambahkan event listener pada setiap input agar menghitung saat Enter ditekan
+    document.querySelectorAll("input").forEach(function(input) {
+      input.addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+          calculateDosage();
+        }
+      });
+    });
+
+    // Lakukan perhitungan saat halaman pertama kali dimuat
+    window.addEventListener("load", calculateDosage);
+  </script>
+</body>
+</html>
