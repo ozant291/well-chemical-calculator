@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chemical Dosage Calculator</title>
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-z8d9rR6XWJAbvR/Le0yMlB+vzXoNj1Q2YL+YzI5lHnMvR5C4MjYmiHW9C1h5ZeYw3Zb9z6bqEYxJEjixu3jR4g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --primary: #5563DE;
+      --secondary: #74ABE2;
+      --accent: #28a745;
+      --bg: #f0f4f8;
+      --text: #333;
+      --light: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 20px;
+      font-family: 'Roboto', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .container {
+      max-width: 1200px; margin: auto;
+      background: var(--light); padding: 40px;
+      border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center; margin-bottom: 10px;
+      font-weight: 500; color: var(--primary);
+    }
+    p {
+      text-align: center; margin-bottom: 30px;
+      color: var(--text);
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+      border-radius: 8px; overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    th, td {
+      padding: 12px 15px; text-align: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    th {
+      background: var(--primary); color: var(--light);
+      text-transform: uppercase; font-size: 14px;
+    }
+    tr:nth-child(even) td { background: #fafafa; }
+    tr:hover td { background: #e9f2fe; }
+    td input {
+      width: 100%; padding: 8px;
+      border: 1px solid #ccc; border-radius: 6px;
+      font-size: 14px;
+    }
+    .buttons {
+      display: flex; justify-content: center;
+      gap: 16px; margin-top: 20px;
+    }
+    .btn {
+      display: inline-flex; align-items: center;
+      gap: 8px; padding: 12px 24px;
+      border: none; border-radius: 6px;
+      font-size: 16px; cursor: pointer;
+      transition: background 0.3s, transform 0.1s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-calc { background: var(--accent); color: var(--light); }
+    .btn-print { background: var(--primary); color: var(--light); }
+    .btn-save { background: var(--secondary); color: var(--light); }
+    /* Responsive */
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr { display: block; }
+      thead tr { display: none; }
+      td {
+        position: relative; padding-left: 50%;
+        border: none; border-bottom: 1px solid #eee;
+        text-align: left;
+      }
+      td:before {
+        position: absolute; left: 10px; top: 12px;
+        width: 45%; white-space: nowrap;
+        font-weight: 500;
+      }
+      td:nth-of-type(1):before { content: "Well"; }
+      td:nth-of-type(2):before { content: "Flow (MMSCF)"; }
+      td:nth-of-type(3):before { content: "Dosage (pint/MMSCF)"; }
+      td:nth-of-type(4):before { content: "Pint/Day"; }
+      td:nth-of-type(5):before { content: "Liter/Day"; }
+      td:nth-of-type(6):before { content: "Cm/Day"; }
+      td:nth-of-type(7):before { content: "Quart/Day"; }
+      td:nth-of-type(8):before { content: "mL/Min"; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Chemical Dosage Calculator</h1>
+    <p>Masukkan Flow Gas (MMSCF) dan Dosage (pint/MMSCF) lalu tekan Enter, klik Hitung, Cetak, atau Simpan Data.</p>
+    <table id="dosageTable">
+      <thead>
+        <tr>
+          <th>Well</th>
+          <th>Flow</th>
+          <th>Dosage</th>
+          <th>Pint/Day</th>
+          <th>Liter/Day</th>
+          <th>Cm/Day</th>
+          <th>Quart/Day</th>
+          <th>mL/Min</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- default rows with data -->
+        <tr><td>DM 2</td><td><input class="flow" value="29"></td><td><input class="dosage" value="0.75"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>2</td><td><input class="flow" value="10.5"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>3</td><td><input class="flow" value="5"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>4</td><td><input class="flow" value="19"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>5</td><td><input class="flow" value="21"></td><td><input class="dosage" value="0.70"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>6</td><td><input class="flow" value="8"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>8</td><td><input class="flow" value="25"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>9</td><td><input class="flow" value="3.5"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>10</td><td><input class="flow" value="74"></td><td><input class="dosage" value="0.75"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>11</td><td><input class="flow" value="64"></td><td><input class="dosage" value="0.75"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>12</td><td><input class="flow" value="44.5"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>13</td><td><input class="flow" value="15.6"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>14</td><td><input class="flow" value="35"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>15</td><td><input class="flow" value="40"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>16</td><td><input class="flow" value="71"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>18</td><td><input class="flow" value="9.7"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>22</td><td><input class="flow" value="2.5"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>24</td><td><input class="flow" value="64"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+        <tr><td>27</td><td><input class="flow" value="52"></td><td><input class="dosage" value="0.65"></td><td class="pintDay"></td><td class="literDay"></td><td class="cmDay"></td><td class="quartDay"></td><td class="mlMin"></td></tr>
+      </tbody>
+    </table>
+    <div class="buttons">
+      <button id="calculateBtn" class="btn btn-calc"><i class="fas fa-calculator"></i> Hitung</button>
+      <button id="printBtn" class="btn btn-print"><i class="fas fa-print"></i> Cetak</button>
+      <button id="saveBtn" class="btn btn-save"><i class="fas fa-save"></i> Simpan Data</button>
+    </div>
+  </div>
+
+  <script>
+    // Hitung dosis berdasarkan input
+    function calculateDosage() {
+      const pintToLiter = 0.473,
+            literToQuart = 1.057,
+            literPerCm = 12,
+            minutesPerDay = 1440;
+
+      document.querySelectorAll("#dosageTable tbody tr").forEach(row => {
+        const flow   = parseFloat(row.querySelector(".flow").value)   || 0;
+        const dosage = parseFloat(row.querySelector(".dosage").value) || 0;
+        const pint   = flow * dosage;
+        const liter  = pint * pintToLiter;
+        const cm     = liter / literPerCm;
+        const quart  = liter * literToQuart;
+        const mlMin  = (liter * 1000) / minutesPerDay;
+
+        row.querySelector(".pintDay").textContent  = pint.toFixed(2);
+        row.querySelector(".literDay").textContent = liter.toFixed(2);
+        row.querySelector(".cmDay").textContent    = cm.toFixed(2);
+        row.querySelector(".quartDay").textContent = quart.toFixed(2);
+        row.querySelector(".mlMin").textContent    = mlMin.toFixed(2);
+      });
+    }
+
+    // Simpan setting ke localStorage
+    function saveSettings() {
+      const settings = [];
+      document.querySelectorAll("#dosageTable tbody tr").forEach(row => {
+        settings.push({
+          flow:   row.querySelector(".flow").value,
+          dosage: row.querySelector(".dosage").value
+        });
+      });
+      localStorage.setItem("dosageSettings", JSON.stringify(settings));
+      alert("Data tersimpan!"); 
+    }
+
+    // Muat setting dari localStorage
+    function loadSettings() {
+      const saved = localStorage.getItem("dosageSettings");
+      if (!saved) return;
+      const settings = JSON.parse(saved);
+      document.querySelectorAll("#dosageTable tbody tr").forEach((row, i) => {
+        if (settings[i]) {
+          row.querySelector(".flow").value   = settings[i].flow;
+          row.querySelector(".dosage").value = settings[i].dosage;
+        }
+      });
+    }
+
+    // Cetak
+    document.getElementById("printBtn").onclick = () => window.print();
+    // Hitung
+    document.getElementById("calculateBtn").onclick = calculateDosage;
+    // Simpan (persistent)
+    document.getElementById("saveBtn").onclick = () => {
+      calculateDosage();
+      saveSettings();
+    };
+    // Enter pada input
+    document.querySelectorAll("input").forEach(i =>
+      i.addEventListener("keyup", e => { if (e.key === "Enter") calculateDosage(); })
+    );
+    // Inisialisasi pada load
+    window.addEventListener("load", () => {
+      loadSettings();
+      calculateDosage();
+    });
+  </script>
+</body>
+</html>
